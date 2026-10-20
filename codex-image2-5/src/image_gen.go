@@ -26,7 +26,6 @@ import (
 )
 
 const (
-	defaultAPIURL    = "https://apinebula.com"
 	defaultModel     = "gpt-image-2.5"
 	defaultGrokModel = "grok-imagine-image-2.0"
 	defaultSize      = "1K"
@@ -135,15 +134,15 @@ type batchJob struct {
 	Out     string `json:"out,omitempty"`
 }
 
-func endpoint(base, operation string) string {
+func endpoint(base, operation string) (string, error) {
 	base = strings.TrimRight(strings.TrimSpace(base), "/")
 	if base == "" {
-		base = defaultAPIURL
+		return "", errors.New("CODEX_API_URL is not set; set your API base URL locally, then retry")
 	}
 	if !strings.HasSuffix(base, "/v1") {
 		base += "/v1"
 	}
-	return base + "/images/" + operation
+	return base + "/images/" + operation, nil
 }
 
 // resolveSize 接受 1K/2K/4K、auto，或 WIDTHxHEIGHT。发给上游的永远是后两种。
@@ -633,7 +632,10 @@ func generate(prompt, out string, args commonArgs) (map[string]any, error) {
 	if err := checkOutputs(paths, args.force); err != nil {
 		return nil, err
 	}
-	ep := endpoint(os.Getenv("CODEX_API_URL"), "generations")
+	ep, err := endpoint(os.Getenv("CODEX_API_URL"), "generations")
+	if err != nil {
+		return nil, err
+	}
 	spec, err := prepareImageRequest(prompt, args)
 	if err != nil {
 		return nil, err
@@ -686,7 +688,10 @@ func edit(prompt string, imagePaths []string, mask, out string, args commonArgs)
 	if err := checkOutputs(paths, args.force); err != nil {
 		return nil, err
 	}
-	ep := endpoint(os.Getenv("CODEX_API_URL"), "edits")
+	ep, err := endpoint(os.Getenv("CODEX_API_URL"), "edits")
+	if err != nil {
+		return nil, err
+	}
 	spec, err := prepareImageRequest(prompt, args)
 	if err != nil {
 		return nil, err

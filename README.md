@@ -1,4 +1,4 @@
-# Codex Image 2.5 Skill（鹊桥赞助支持）
+# Codex Image 2.5 Skill
 
 让 Codex 通过你配置的 OpenAI 兼容 API 生成和编辑图片。默认 **GPT Image 2.5（`gpt-image-2.5`）+ 1K**，也支持 Image 2、闪焰、日耀和 Grok 生图模型。
 
@@ -17,7 +17,7 @@
 
 ```text
 请帮我安装或更新 Codex Image 2.5：
-https://github.com/daifei-0/codex-image2-5-skill
+https://github.com/Ssshake1996/codex-image2-5-skill
 技能位于仓库内 codex-image2-5 目录。
 如果已装旧版 codex-image2，请先备份旧版到技能目录之外，再替换为新版，避免两个版本同时启用。
 保留已有 CODEX_API_URL 和 CODEX_API_KEY，不要打印密钥。
@@ -30,26 +30,26 @@ https://github.com/daifei-0/codex-image2-5-skill
 Windows PowerShell：
 
 ```powershell
-git clone https://github.com/daifei-0/codex-image2-5-skill.git
+git clone https://github.com/Ssshake1996/codex-image2-5-skill.git
 Copy-Item codex-image2-5-skill\codex-image2-5 "$HOME\.codex\skills\codex-image2-5" -Recurse
 ```
 
 macOS：
 
 ```bash
-git clone https://github.com/daifei-0/codex-image2-5-skill.git
+git clone https://github.com/Ssshake1996/codex-image2-5-skill.git
 cp -R codex-image2-5-skill/codex-image2-5 ~/.codex/skills/codex-image2-5
 chmod +x ~/.codex/skills/codex-image2-5/bin/codex-image2-5-darwin-*
 ```
 
 ## 配置 API
 
-程序读取两个环境变量：
+使用前需配置两个环境变量：
 
-- `CODEX_API_URL`：API 根地址或以 `/v1` 结尾的地址。
+- `CODEX_API_URL`：你选择的兼容 API 根地址或以 `/v1` 结尾的地址，必须填写，没有内置默认站点。
 - `CODEX_API_KEY`：你自己的 API 密钥，只在本机安全设置，不发到聊天、截图或仓库。
 
-使用鹊桥时，地址填写 `https://cdn.5202828.xyz/v1`。在控制台创建具有目标生图模型权限的令牌。
+所选服务需兼容 `POST /v1/images/generations`、`POST /v1/images/edits`，并提供目标生图模型。API 地址和密钥均由你自行配置；未设置地址时程序会提示错误，不会自动使用其他站点。
 
 Windows 可在系统「编辑账户的环境变量」中设置以上两项。macOS 可在自己的 shell 环境中设置；从桌面启动的客户端需要能继承该环境。不要把密钥写进 SKILL.md。
 
@@ -130,7 +130,7 @@ Windows 可在系统「编辑账户的环境变量」中设置以上两项。mac
   --out "output/imagegen/nebula.png"
 ```
 
-指定口语别名、仅校验参数，不调用 API：
+指定口语别名、仅校验参数，不调用 API（仍需配置 `CODEX_API_URL`，无需密钥）：
 
 ```powershell
 & "codex-image2-5/bin/codex-image2-5-windows-amd64.exe" generate `
@@ -162,24 +162,17 @@ $env:GOARCH = "amd64"
 go build -trimpath -ldflags "-s -w" -o codex-image2-5/bin/codex-image2-5-windows-amd64.exe codex-image2-5/src/image_gen.go
 ```
 
-## 鹊桥在线生图与教程
-
-不安装技能也可以使用 [鹊桥在线生图](https://cdn.5202828.xyz/draw/)，网页支持的模型以页面为准。
-
-![鹊桥在线生图](docs/images/queqiao-draw.jpg)
-
-[鹊桥使用教程与常见问题](https://cdn.5202828.xyz/docs/faq.html)
-
 ## 常见问题
 
 - **找不到新版技能**：更新后确认目录和名称都是 `codex-image2-5`，重新加载技能列表或开启新对话；旧安装不会随着仓库改名自动升级。
 - **401 / 模型不可用**：检查令牌是否有效、分组及模型权限是否包含所选模型。程序不会偷偷换模型。
+- **未设置 API 地址**：配置 `CODEX_API_URL`；程序不再提供默认站点，`--dry-run` 也需要该配置。
 - **没有 API Key**：确认本机环境变量以及客户端进程是否已读取配置。
 - **524 / 超时 / 429**：程序已有有限次数重试；仍失败时可减少批量并发、选1K或稍后再试，不会无限重试。
 - **图片没有达到请求分辨率**：查看 `actual_size` 和 `warning`，按实际像素判断，不把请求档位当成生成结果。
 - **视频**：此技能仅处理图片，拒绝视频模型。
-- **其他中转站**：需兼容 `POST /v1/images/generations`、`POST /v1/images/edits`，并提供所选模型。
+- **API 兼容性**：需兼容 `POST /v1/images/generations`、`POST /v1/images/edits`，并提供所选模型。
 
 ## 关于本仓库与许可
 
-本项目作者为 [daifei-0](https://github.com/daifei-0)，由鹊桥赞助支持，采用 [MIT 许可证](LICENSE)。本版本支持多模型与分辨率适配、对话切换和别名识别。
+本分支作者为 [sshake](https://github.com/Ssshake1996)，基于上游开源项目修改，采用 [MIT 许可证](LICENSE)，保留上游原始版权声明。本版本支持多模型与分辨率适配、对话切换和别名识别。

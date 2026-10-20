@@ -153,12 +153,12 @@ Read [references/batch-format.md](references/batch-format.md) before preparing a
 
 ## Configuration and safety
 
-- Read the API base from `CODEX_API_URL`; default to `https://apinebula.com`.
+- Require an explicit API base in `CODEX_API_URL`; there is no default provider. If it is absent, ask the user to configure their compatible API base locally before retrying.
 - Require `CODEX_API_KEY`. Never place it in a command, file, prompt, log, or response.
 - If the key is absent, tell the user to set it locally and confirm when ready. Never ask them to paste it into chat.
 - Default to model `gpt-image-2.5` and size `1K` when this conversation has not selected them. Switch with `--model` / `--size 1K|2K|4K` from the user's chat this turn. Never ask them to restart Codex or edit text config to change model or 画质.
 - `--quality` defaults to `auto` (`low`, `medium`, `high`, or `auto`).
-- Use `--dry-run` to validate a request without network access or requiring a key.
+- Use `--dry-run` to validate a request without network access or requiring a key. `CODEX_API_URL` is still required so the displayed endpoint reflects the user's configuration.
 - Save project-bound assets inside the current project. The CLI default is `output/imagegen/`.
 - Do not overwrite files unless the user explicitly authorizes it and `--force` is passed.
 - Native transparent output is not guaranteed. Do not promise it or silently switch tools.
